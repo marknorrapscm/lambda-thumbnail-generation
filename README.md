@@ -17,4 +17,4 @@ Create a Lambda and use the files in the `src/` folder. You need to read the art
 
 ### 🎲 Why would I use this over AWS Transcoder?
 
-You wouldn't, necessarily. AWS Transcoder is good but very expensive compared to doing it yourself in Lambda. I have processed a few hundred short videos using the above source code / technique laid out in the article. The cost has been $0.00. Using AWS Transcoder it would have cost me several hundred USD.
+You wouldn't, necessarily. AWS Transcoder is good but very expensive compared to doing it yourself in Lambda. I have processed a few hundred short videos using the above source code / technique laid out in the article; the cost has been $0.00. AWS Transcoder costs around $0.45 per 60 minutes of video processed.
