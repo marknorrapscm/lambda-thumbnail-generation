@@ -2,7 +2,6 @@ const fs = require("fs");
 const AWS = require("aws-sdk");
 const generateTmpFilePath = require("./generate-tmp-file-path");
 
-const tmpVideoPathTemplate = "/tmp/vid-{HASH}.mp4";
 
 module.exports = async (triggerBucketName, videoFileName) => {
 	const downloadResult = await getVideoFromS3(triggerBucketName, videoFileName);
@@ -23,8 +22,8 @@ const getVideoFromS3 = async (triggerBucketName, fileName) => {
 };
 
 const saveFileToTmpDirectory = async (fileAsBuffer) => {
+    const tmpVideoPathTemplate = "/tmp/vid-{HASH}.mp4";
     const tmpVideoFilePath = generateTmpFilePath(tmpVideoPathTemplate);
-	fs.createWriteStream(tmpVideoFilePath); // try without this; not sure we really need it
 	await fs.promises.writeFile(tmpVideoFilePath, fileAsBuffer, "base64");
 
 	return tmpVideoFilePath;
