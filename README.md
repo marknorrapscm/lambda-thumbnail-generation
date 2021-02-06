@@ -2,18 +2,20 @@
 
 ### 🚀 What is this?
 
-This is the complete source code to accompany the article here: <url>
+This is the complete source code to accompany the [article here](https://www.norrapscm.com/posts/2021-01-31-generate-thumbnails-using-lambda/).
 
-Basically:
+### ⭐ What does it do?
 
-* Create an S3 bucket
-* Create a trigger event to run a Lambda whenever an `mp4` file is uploaded to that bucket
-* That event triggers the Lambda (created from this source code) which uses FFmpeg to generate *n* thumbnails
-* Those thumbnails are then uploaded to anotehr S3 bucket
+It takes a video that was uploaded to an S3 bucket and generates *n* number of thumbnails from it.
 
 ### 💨 How do I use it?
 
-Create a Lambda and use the files in the `src/` folder. You need to read the article to see how it ties in the AWS infrastructure.
+Create a Lambda and use the files in the `src/` folder. You need to read the article to see how it ties in the AWS infrastructure, but basically:
+
+* Create an S3 bucket
+* Create a trigger event to run a Lambda whenever an `.mp4` file is uploaded to that bucket
+* That event triggers the Lambda (created from this source code) which uses FFmpeg to generate *n* thumbnails
+* Those thumbnails are then uploaded to another S3 bucket
 
 ### 🎲 Why would I use this over AWS Transcoder?
 
