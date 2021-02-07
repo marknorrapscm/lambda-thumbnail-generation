@@ -2,7 +2,7 @@
 
 ### 🚀 What is this?
 
-This is the complete source code to accompany the [article here](https://www.norrapscm.com/posts/2021-01-31-generate-thumbnails-using-lambda/).
+This is the complete source code to accompany the [article here](https://www.norrapscm.com/posts/2021-02-08-generate-thumbnails-in-lambda-from-s3-with-ffmpeg/).
 
 ### ⭐ What does it do?
 
