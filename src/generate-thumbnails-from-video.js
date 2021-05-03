@@ -76,8 +76,8 @@ const generateThumbnailPath = (targetSecond) => {
 
 const createFfmpegParams = (tmpVideoPath, tmpThumbnailPath, targetSecond) => {
     return [
-        "-i", tmpVideoPath,
         "-ss", targetSecond,
+        "-i", tmpVideoPath,
         "-vf", "thumbnail,scale=80:140",
         "-vframes", 1,
         tmpThumbnailPath

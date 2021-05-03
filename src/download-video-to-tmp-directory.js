@@ -2,7 +2,6 @@ const fs = require("fs");
 const AWS = require("aws-sdk");
 const generateTmpFilePath = require("./generate-tmp-file-path");
 
-
 module.exports = async (triggerBucketName, videoFileName) => {
 	const downloadResult = await getVideoFromS3(triggerBucketName, videoFileName);
 	const videoAsBuffer = downloadResult.Body;
