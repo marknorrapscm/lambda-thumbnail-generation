@@ -9,20 +9,49 @@ const ffmpegPath = "/opt/bin/ffmpeg";
 
 const THUMBNAIL_TARGET_BUCKET = "demo-thumbnail-bucket";
 
-module.exports = async (tmpVideoPath, numberOfThumbnailsToCreate, videoFileName) => {
-    const durationInSeconds = getVideoDuration(tmpVideoPath);
-    const randomTimes = generateRandomTimes(durationInSeconds, numberOfThumbnailsToCreate);
-
-    for (let i = 0; i < randomTimes.length; i++) {
-        const time = randomTimes[i];
-        const nameOfImageToCreate = generateNameOfImageToUpload(videoFileName, i);
-        const tmpThumbnailPath = await createImageInTmpDirectory(tmpVideoPath, time);
+module.exports = async (tmpVideoPath, numberOfThumbnails, videoFileName) => {
+    const randomTimes = generateRandomTimes(tmpVideoPath, numberOfThumbnails);
+    
+    for(const [index, randomTime] of Object.entries(randomTimes)) {
+        const tmpThumbnailPath = await createImageFromVideo(tmpVideoPath, randomTime);
 
         if (doesFileExist(tmpThumbnailPath)) {
+            const nameOfImageToCreate = generateNameOfImageToUpload(videoFileName, index);
             await uploadFileToS3(tmpThumbnailPath, nameOfImageToCreate);
         }
     }
 }
+
+const generateRandomTimes = (tmpVideoPath, numberOfTimesToGenerate) => {
+    const timesInSeconds = [];
+    const videoDuration = getVideoDuration(tmpVideoPath);
+
+    for (let x = 0; x < numberOfTimesToGenerate; x++) {
+        const randomNum = getRandomNumberNotInExistingList(timesInSeconds, videoDuration);
+        
+        if(randomNum >= 0) {
+            timesInSeconds.push(randomNum);
+        }
+    }
+
+    return timesInSeconds;
+};
+
+const getRandomNumberNotInExistingList = (existingList, maxValueOfNumber) => {
+    for (let attemptNumber = 0; attemptNumber < 3; attemptNumber++) {
+        const randomNum = getRandomNumber(maxValueOfNumber);
+        
+        if (!existingList.includes(randomNum)) {
+            return randomNum;
+        }
+    }
+    
+    return -1;
+}
+
+const getRandomNumber = (upperLimit) => {
+    return Math.floor(Math.random() * upperLimit);
+};
 
 const getVideoDuration = (tmpVideoPath) => {
     const ffprobe = spawnSync(ffprobePath, [
@@ -38,27 +67,7 @@ const getVideoDuration = (tmpVideoPath) => {
     return Math.floor(ffprobe.stdout.toString());
 };
 
-const generateRandomTimes = (videoDuration, numberOfTimesToGenerate) => {
-    const timesInSeconds = [];
-
-    const getRandomNumber = () => {
-        return Math.floor(Math.random() * videoDuration);
-    };
-
-    for (let x = 0; x < numberOfTimesToGenerate; x++) {
-        for (let attemptNumber = 0; attemptNumber < 3; attemptNumber++) {
-            const randomNum = getRandomNumber();
-            if (!timesInSeconds.includes(randomNum)) {
-                timesInSeconds.push(randomNum);
-                break;
-            }
-        }
-    }
-
-    return timesInSeconds;
-};
-
-const createImageInTmpDirectory = (tmpVideoPath, targetSecond) => {
+const createImageFromVideo = (tmpVideoPath, targetSecond) => {
     const tmpThumbnailPath = generateThumbnailPath(targetSecond);
     const ffmpegParams = createFfmpegParams(tmpVideoPath, tmpThumbnailPath, targetSecond);
     spawnSync(ffmpegPath, ffmpegParams);
