@@ -7,7 +7,7 @@ const generateThumbnailsFromVideo = require("./generate-thumbnails-from-video");
 const THUMBNAILS_TO_CREATE = 2;
 
 exports.handler = async (event) => {
-    wipeTmpDirectory();
+    await wipeTmpDirectory();
 	const { videoFileName, triggerBucketName } = extractParams(event);
 	const tmpVideoPath = await downloadVideoToTmpDirectory(triggerBucketName, videoFileName);
 
@@ -23,14 +23,8 @@ const extractParams = event => {
 	return { videoFileName, triggerBucketName };
 };
 
-const wipeTmpDirectory = () => {
-    fs.readdir("/tmp/", (err, files) => {
-        if (err) { throw err; }
-
-        for (const file of files) {
-            fs.unlink(path.join("/tmp/", file), err => {
-                if (err) { throw err; }
-            });
-        }
-    });
+const wipeTmpDirectory = async () => {
+    const files = await fs.promises.readdir("/tmp/");
+    const filePaths = files.map(file => path.join("/tmp/", file));
+    await Promise.all(filePaths.map(file => fs.promises.unlink(file)));
 }
