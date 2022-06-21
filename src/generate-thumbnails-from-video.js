@@ -11,7 +11,7 @@ const THUMBNAIL_TARGET_BUCKET = "demo-thumbnail-bucket";
 
 module.exports = async (tmpVideoPath, numberOfThumbnails, videoFileName) => {
     const randomTimes = generateRandomTimes(tmpVideoPath, numberOfThumbnails);
-    
+
     for(const [index, randomTime] of Object.entries(randomTimes)) {
         const tmpThumbnailPath = await createImageFromVideo(tmpVideoPath, randomTime);
 
@@ -28,7 +28,7 @@ const generateRandomTimes = (tmpVideoPath, numberOfTimesToGenerate) => {
 
     for (let x = 0; x < numberOfTimesToGenerate; x++) {
         const randomNum = getRandomNumberNotInExistingList(timesInSeconds, videoDuration);
-        
+
         if(randomNum >= 0) {
             timesInSeconds.push(randomNum);
         }
@@ -40,12 +40,12 @@ const generateRandomTimes = (tmpVideoPath, numberOfTimesToGenerate) => {
 const getRandomNumberNotInExistingList = (existingList, maxValueOfNumber) => {
     for (let attemptNumber = 0; attemptNumber < 3; attemptNumber++) {
         const randomNum = getRandomNumber(maxValueOfNumber);
-        
+
         if (!existingList.includes(randomNum)) {
             return randomNum;
         }
     }
-    
+
     return -1;
 }
 
@@ -104,8 +104,7 @@ const uploadFileToS3 = async (tmpThumbnailPath, nameOfImageToCreate) => {
         Bucket: THUMBNAIL_TARGET_BUCKET,
         Key: nameOfImageToCreate,
         Body: contents,
-        ContentType: "image/jpg",
-        ACL: "public-read"
+        ContentType: "image/jpg"
     };
 
     const s3 = new AWS.S3();
