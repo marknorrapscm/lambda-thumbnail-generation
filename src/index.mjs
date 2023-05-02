@@ -1,13 +1,13 @@
-const fs = require("fs");
-const path = require("path");
-const doesFileExist = require("./does-file-exist");
-const downloadVideoToTmpDirectory = require("./download-video-to-tmp-directory");
-const generateThumbnailsFromVideo = require("./generate-thumbnails-from-video");
+import fs from "fs";
+import path from "path";
+import doesFileExist from "./does-file-exist.mjs";
+import downloadVideoToTmpDirectory from "./download-video-to-tmp-directory.mjs";
+import generateThumbnailsFromVideo from "./generate-thumbnails-from-video.mjs";
 
 const THUMBNAILS_TO_CREATE = 2;
 
-exports.handler = async (event) => {
-    await wipeTmpDirectory();
+export const handler = async (event) => {
+	await wipeTmpDirectory();
 	const { videoFileName, triggerBucketName } = extractParams(event);
 	const tmpVideoPath = await downloadVideoToTmpDirectory(triggerBucketName, videoFileName);
 
@@ -24,7 +24,7 @@ const extractParams = event => {
 };
 
 const wipeTmpDirectory = async () => {
-    const files = await fs.promises.readdir("/tmp/");
-    const filePaths = files.map(file => path.join("/tmp/", file));
-    await Promise.all(filePaths.map(file => fs.promises.unlink(file)));
+	const files = await fs.promises.readdir("/tmp/");
+	const filePaths = files.map(file => path.join("/tmp/", file));
+	await Promise.all(filePaths.map(file => fs.promises.unlink(file)));
 }

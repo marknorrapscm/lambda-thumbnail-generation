@@ -1,4 +1,4 @@
-module.exports = (filePathTemplate) => {
+export default (filePathTemplate) => {
 	const hash = getRandomString(10);
 	const tmpFilePath = filePathTemplate.replace("{HASH}", hash);
 

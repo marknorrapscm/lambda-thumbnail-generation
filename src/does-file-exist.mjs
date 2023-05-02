@@ -1,6 +1,6 @@
-const fs = require("fs");
+import fs from "fs";
 
-module.exports = (filePath) => {
+export default (filePath) => {
 	if (fs.existsSync(filePath)) {
 		const stats = fs.statSync(filePath);
 		const fileSizeInBytes = stats.size;

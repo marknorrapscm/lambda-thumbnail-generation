@@ -20,3 +20,13 @@ Create a Lambda and use the files in the `src/` folder. You need to read the art
 ### 🎲 Why would I use this over AWS Transcoder?
 
 You wouldn't, necessarily. AWS Transcoder is good but very expensive compared to doing it yourself in Lambda. I have processed a few hundred short videos using the above source code / technique laid out in the article; the cost has been $0.00. AWS Transcoder costs around $0.45 per 60 minutes of video processed.
+
+---
+
+### Changelog:
+#### 13th February 2023: 
+
+AWS has begun defaulting Lambdas to v18 of Node. The code has been updated to use v18, which includes:
+   * Using ESM syntax rather than CJS (`export default` rather than `module.exports`)
+   * Using the `.mjs` extension rather than `.js`
+   * Assuming V3 of the AWS-SDK rather than V2

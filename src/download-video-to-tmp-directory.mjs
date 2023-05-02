@@ -1,8 +1,8 @@
-const fs = require("fs");
-const AWS = require("aws-sdk");
-const generateTmpFilePath = require("./generate-tmp-file-path");
+import { S3 } from "@aws-sdk/client-s3";
+import fs from "fs";
+import generateTmpFilePath from "./generate-tmp-file-path.mjs";
 
-module.exports = async (triggerBucketName, videoFileName) => {
+export default async (triggerBucketName, videoFileName) => {
 	const downloadResult = await getVideoFromS3(triggerBucketName, videoFileName);
 	const videoAsBuffer = downloadResult.Body;
 	const tmpVideoFilePath = await saveFileToTmpDirectory(videoAsBuffer);
@@ -11,11 +11,11 @@ module.exports = async (triggerBucketName, videoFileName) => {
 }
 
 const getVideoFromS3 = async (triggerBucketName, fileName) => {
-	const s3 = new AWS.S3();
+	const s3 = new S3();
 	const res = await s3.getObject({
 		Bucket: triggerBucketName,
 		Key: fileName
-	}).promise();
+	});
 
 	return res;
 };

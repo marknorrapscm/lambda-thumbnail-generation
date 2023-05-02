@@ -1,15 +1,15 @@
-const AWS = require("aws-sdk");
-const fs = require("fs");
-const { spawnSync } = require("child_process");
-const doesFileExist = require("./does-file-exist");
-const generateTmpFilePath = require("./generate-tmp-file-path");
+import fs from "fs";
+import { S3 } from "@aws-sdk/client-s3";
+import { spawnSync } from "child_process";
+import doesFileExist from "./does-file-exist.mjs";
+import generateTmpFilePath from "./generate-tmp-file-path.mjs";
 
 const ffprobePath = "/opt/bin/ffprobe";
 const ffmpegPath = "/opt/bin/ffmpeg";
 
 const THUMBNAIL_TARGET_BUCKET = "demo-thumbnail-bucket";
 
-module.exports = async (tmpVideoPath, numberOfThumbnails, videoFileName) => {
+export default async (tmpVideoPath, numberOfThumbnails, videoFileName) => {
     const randomTimes = generateRandomTimes(tmpVideoPath, numberOfThumbnails);
 
     for(const [index, randomTime] of Object.entries(randomTimes)) {
@@ -107,6 +107,6 @@ const uploadFileToS3 = async (tmpThumbnailPath, nameOfImageToCreate) => {
         ContentType: "image/jpg"
     };
 
-    const s3 = new AWS.S3();
-    await s3.putObject(uploadParams).promise();
+    const s3 = new S3();
+    await s3.putObject(uploadParams)();
 };
